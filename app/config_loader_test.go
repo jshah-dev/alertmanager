@@ -14,7 +14,6 @@
 package app
 
 import (
-	"context"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -67,11 +66,10 @@ func TestStartupWithHTTPConfig(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create app with HTTP config: %v", err)
 	}
-	defer func() { _ = app.Stop(context.Background()) }()
+	defer func() { _ = app.Stop(t.Context()) }()
 
 	// Start the app.
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	ctx := t.Context()
 	go func() { _ = app.Start() }()
 
 	// Verify it started without error.
@@ -117,10 +115,9 @@ func TestStartupWithFileConfig(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create app with file config: %v", err)
 	}
-	defer func() { _ = app.Stop(context.Background()) }()
+	defer func() { _ = app.Stop(t.Context()) }()
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	ctx := t.Context()
 	go func() { _ = app.Start() }()
 
 	select {
